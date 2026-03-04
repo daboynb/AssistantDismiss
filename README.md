@@ -1,72 +1,26 @@
 # Assistant Dismiss
 
-Accessibility service that auto-dismisses the Google Assistant bubble when YouTube Music ReVanced starts playing.
+When you ask Google Assistant to play music on YouTube Music ReVanced, the music starts but the Assistant overlay stays on screen:
 
-## The problem
+<p align="center">
+  <img src="screenshot.jpg" width="300" />
+</p>
 
-When you say **"Hey Google, play [song]"**, YouTube Music ReVanced starts playing the track but the **Google Assistant bubble stays open** on screen. This happens because Google's server doesn't send the close command when music starts playing through microG.
+This happens because microG doesn't send the close signal back to Assistant after playback starts. This app auto-dismisses the overlay once music is playing.
 
-## The solution
+## Requirements
 
-A small standalone app that works as an accessibility service:
-
-1. Detects when the Assistant bubble opens
-2. Waits for music to start playing
-3. Automatically dismisses it
-
-If you're **not** listening to music (e.g. asking the Assistant a question), the bubble is **not** touched.
-
-> Why a separate app instead of inside GmsCore? Because GmsCore is too large — Android blocks accessibility services from apps with too many components. A lightweight standalone app works without issues.
-
----
-
-## Build
-
-```bash
-./gradlew assembleRelease
-```
-
-Output: `app/build/outputs/apk/release/AssistantDismiss-1.0.apk`
+A [patched GmsCore](https://github.com/daboynb/GmsCore) is also needed. Without it, YouTube Music crashes when Assistant tries to connect to it (Dynamite modules load from the real GMS instead of microG). Download it from [GmsCore Releases](https://github.com/daboynb/GmsCore/releases).
 
 ## Install
 
-```bash
-adb install -r app/build/outputs/apk/release/AssistantDismiss-1.0.apk
-```
-
-### Enable the accessibility service
+1. Download [AssistantDismiss](https://github.com/daboynb/AssistantDismiss/releases) and [GmsCore](https://github.com/daboynb/GmsCore/releases)
+2. Install both APKs
+3. Run the following ADB commands:
 
 ```bash
+adb shell pm grant app.revanced.android.gms.assistant android.permission.WRITE_SECURE_SETTINGS
 adb shell settings put secure enabled_accessibility_services \
   "app.revanced.android.gms.assistant/org.microg.gms.assistant.AssistantDismissService"
 adb shell settings put secure accessibility_enabled 1
 ```
-
-Or from the phone: **Settings > Accessibility > Assistant Dismiss > Enable**.
-
-### Auto-restart after reboot (optional)
-
-Android disables accessibility services after reboot. To fix this, run once:
-
-```bash
-adb shell pm grant app.revanced.android.gms.assistant android.permission.WRITE_SECURE_SETTINGS
-```
-
-After that, the service will re-enable itself automatically at boot.
-
-### Verify
-
-```bash
-adb shell dumpsys accessibility | grep assistant
-```
-
-If you see `app.revanced.android.gms.assistant` in enabled services, you're all set.
-
----
-
-## Testing
-
-| Voice command | Expected result |
-|---|---|
-| "Hey Google, play a song" | The bubble closes after a few seconds |
-| "Hey Google, what's the weather?" | The bubble stays open (no music = no action) |
