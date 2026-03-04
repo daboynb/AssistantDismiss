@@ -10,7 +10,7 @@ This happens because microG doesn't send the close signal back to Assistant afte
 
 ## Requirements
 
-A [patched GmsCore](https://github.com/daboynb/GmsCore) is also needed. Without it, YouTube Music crashes when Assistant tries to connect to it (Dynamite modules load from the real GMS instead of microG). Download it from [GmsCore Releases](https://github.com/daboynb/GmsCore/releases).
+A patched GmsCore is also needed. Without it, YouTube Music crashes when Assistant tries to connect to it (Dynamite modules load from the real GMS instead of microG).
 
 ## Install
 
