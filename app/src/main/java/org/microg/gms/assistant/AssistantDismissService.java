@@ -101,15 +101,16 @@ public class AssistantDismissService extends AccessibilityService {
 
         LogBuffer.getInstance().log(TAG, "Dismissing Assistant overlay (music is playing)");
         performGlobalAction(GLOBAL_ACTION_BACK);
-        handler.postDelayed(() -> {
-            if (assistantVisible) {
-                performGlobalAction(GLOBAL_ACTION_BACK);
-                LogBuffer.getInstance().log(TAG, "Assistant still visible, sent second BACK");
-                assistantVisible = false;
-            }
-        }, 500);
         lastDismissTime = now;
         retryCount = 0;
+        // Schedule a check: if Assistant is still visible after BACK, retry once more.
+        // Don't blindly send BACK - only retry if we confirm Assistant is still in foreground.
+        handler.postDelayed(() -> {
+            if (assistantVisible) {
+                LogBuffer.getInstance().log(TAG, "Assistant still visible after BACK, retrying");
+                performGlobalAction(GLOBAL_ACTION_BACK);
+            }
+        }, 1000);
     }
 
     @Override
