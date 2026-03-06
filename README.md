@@ -12,6 +12,15 @@ This happens because microG doesn't send the close signal back to Assistant afte
 
 A patched GmsCore is also needed. Without it, YouTube Music crashes when Assistant tries to connect to it (Dynamite modules load from the real GMS instead of microG).
 
+## Google Assistant Setup
+
+For "Hey Google, play [song]" to work with YouTube Music ReVanced:
+
+1. Go to **Google Settings → Google Assistant → Music** and set the music provider to **None**
+2. Go to **Settings → Apps → Show all apps → YouTube Music → Open by default → Add links** and select the `music` domain.
+
+Without this, Assistant will either try to use the original YouTube Music app or fail to route playback commands to the ReVanced version.
+
 ## Install
 
 1. Download [AssistantDismiss](https://github.com/daboynb/AssistantDismiss/releases) and [GmsCore](https://github.com/daboynb/GmsCore/releases)
