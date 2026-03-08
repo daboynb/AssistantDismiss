@@ -1,3 +1,6 @@
+> [\!WARNING]
+> **This project is under active development.** It is functional but may still contain bugs. Use at your own risk — feel free to open an issue if you encounter any problems\!
+
 # Assistant Dismiss
 
 When you ask Google Assistant to play music on YouTube Music ReVanced, the music starts but the Assistant overlay stays on screen:
